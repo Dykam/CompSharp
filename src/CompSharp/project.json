@@ -1,0 +1,26 @@
+{
+  "version": "1.0.0-*",
+  "compilationOptions": {
+  },
+  "frameworks": {
+    "dnx451": {
+      "dependencies": {
+        "Microsoft.CodeAnalysis.CSharp": "1.1.1"
+      },
+      "frameworkAssemblies": {
+        "System.Runtime": "4.0.10.0",
+        "System.IO": "4.0.0.0",
+        "System.Threading.Tasks": "4.0.0.0",
+        "System.Reflection": "4.0.0.0"
+      }
+    }
+  },
+  "publishExclude": [
+    "**.user",
+    "**.vspscc"
+  ],
+  "dependencies": {
+    "JetBrains.Annotations": "10.0.0",
+    "Microsoft.Dnx.Runtime": "1.0.0-rc1-final"
+  }
+}
