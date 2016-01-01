@@ -1,0 +1,25 @@
+{
+  "version": "1.0.0-*",
+  "description": "Simple Console Application",
+  "authors": [ "" ],
+  "tags": [ "" ],
+  "projectUrl": "",
+  "licenseUrl": "",
+  "compilationOptions": {
+    "emitEntryPoint": true
+  },
+  "tooling": {
+    "defaultNamespace": "Simple"
+  },
+
+  "dependencies": {
+    "CompSharp": ""  },
+
+  "commands": {
+    "Simple": "Simple"
+  },
+
+  "frameworks": {
+    "dnx451": { }
+  }
+}
