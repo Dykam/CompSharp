@@ -136,14 +136,16 @@ namespace CompSharp.Meta
             ValidateRequired(entity);
             EnsureImplied(entity);
 
-            var component = (Component) FormatterServices.GetUninitializedObject(_componentType);
+            var component = (Component)Activator.CreateInstance(_componentType);
             component.Entity = entity;
 
             InjectComponents(entity, component);
 
-            _constructor.DynamicInvoke(component);
+            component.InitializeEarly();
 
             InjectParameters(parameters, component);
+
+            component.Initialize();
 
             InvokeSupports(entity, component);
 
@@ -178,19 +180,6 @@ namespace CompSharp.Meta
 
                 componentProp.SetValue(component, parameterProp.GetValue(parameters));
             }
-        }
-
-        private Delegate BuildDetachedConstructor()
-        {
-            var constructor = _componentType.GetConstructor(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, null, new Type[0], null);
-
-            var helperMethod = new DynamicMethod(string.Empty, typeof (void), new[] {_componentType}, _componentType.Module, true);
-            var ilGenerator = helperMethod.GetILGenerator();
-            ilGenerator.Emit(OpCodes.Ldarg_0);
-            ilGenerator.Emit(OpCodes.Call, constructor);
-            ilGenerator.Emit(OpCodes.Ret);
-
-            return helperMethod.CreateDelegate(typeof(Action<>).MakeGenericType(_componentType));
         }
 
         private void EnsureImplied(IEntity entity)
