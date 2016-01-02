@@ -54,9 +54,6 @@ namespace Simple
         [Support]
         private INameDecorator NameDecorator { get; set; }
 
-        string IToString.ToString()
-        {
-            return NameDecorator == null ? Player.Name : NameDecorator.Decorate(Player.Name);
-        }
+        string IToString.ToString() => NameDecorator == null ? Player.Name : NameDecorator.Decorate(Player.Name);
     }
 }
