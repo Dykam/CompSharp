@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using System.Runtime.Serialization;
 
 namespace CompSharp.Meta
 {
@@ -18,11 +17,10 @@ namespace CompSharp.Meta
 
         private readonly Type _componentType;
         private readonly Type _type;
-        private readonly Delegate _constructor;
 
         internal ComponentInfo(Type componentType)
         {
-            if (!typeof (Component).IsAssignableFrom(componentType) || componentType.IsAbstract)
+            if (!typeof (Component).IsAssignableFrom(componentType) || componentType.GetTypeInfo().IsAbstract)
                 throw new ArgumentException("Type must be a component (inherit Component) and cannot be abstract",
                     nameof(componentType));
 
@@ -32,7 +30,6 @@ namespace CompSharp.Meta
             ProcessClassAttributes();
             ProcessInjected();
             ProcessSupports();
-            _constructor = BuildDetachedConstructor();
         }
 
         private void ProcessInjected()
@@ -87,11 +84,11 @@ namespace CompSharp.Meta
 
         private void ProcessClassAttributes()
         {
-            foreach (var impliedType in _type.GetCustomAttributes<ImpliesAttribute>().SelectMany(attr => attr.Types))
+            foreach (var impliedType in _type.GetTypeInfo().GetCustomAttributes<ImpliesAttribute>().SelectMany(attr => attr.Types))
                 _implies.AddLast(impliedType);
-            foreach (var requiredType in _type.GetCustomAttributes<RequiresAttribute>().SelectMany(attr => attr.Types))
+            foreach (var requiredType in _type.GetTypeInfo().GetCustomAttributes<RequiresAttribute>().SelectMany(attr => attr.Types))
                 _requires.AddLast(requiredType);
-            foreach (var supportedType in _type.GetCustomAttributes<SupportsAttribute>().SelectMany(attr => attr.Types))
+            foreach (var supportedType in _type.GetTypeInfo().GetCustomAttributes<SupportsAttribute>().SelectMany(attr => attr.Types))
                 _supports.AddLast(supportedType);
             foreach (var providedType in _type.GetInterfaces())
                 _provides.AddLast(providedType);
