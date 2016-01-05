@@ -1,0 +1,14 @@
+language: csharp
+
+mono:
+  - latest
+
+install:
+  - curl -sSL https://raw.githubusercontent.com/aspnet/Home/dev/dnvminstall.sh | DNX_BRANCH=dev sh && source ~/.dnx/dnvm/dnvm.sh
+  - dnvm upgrade
+
+# Build, then run tests
+script:
+  - dnu restore --parallel
+  - dnu build src/* samples/* test/*
+  - for project in `find test -maxdepth 1 -mindepth 1 2>/dev/null`; do dnx -p $project test; done

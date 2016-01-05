@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CompSharp.BuiltIn;
 using CompSharp.Meta;
+using System.Reflection;
 
 namespace CompSharp.InMemory
 {
