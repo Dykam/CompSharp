@@ -11,27 +11,36 @@ namespace CompSharp.InMemory
         private readonly LinkedList<Component> _components;
         private readonly InMemoryEntity _original;
 
-        internal InMemoryEntity(Guid id, InMemoryEntity original = null)
+        internal InMemoryEntity(Guid id)
         {
             ID = id;
-            _original = original;
             _components = new LinkedList<Component>();
+        }
+
+        private InMemoryEntity(InMemoryEntity original)
+        {
+            ID = original.ID;
+            _original = original;
         }
 
         public Guid ID { get; }
 
         public Component Get(Type componentType) =>
             _components.FirstOrDefault(componentType.IsInstanceOfType) ?? _original?.Get(componentType);
+        public IEnumerable<Component> GetAll(Type componentType) =>
+            _components.Where(componentType.IsInstanceOfType).Concat(_original?.GetAll(componentType) ?? Enumerable.Empty<Component>());
 
-        public IEntity Augment() =>
-            new InMemoryEntity(Guid.NewGuid(), this);
+        public IEntity Augment() => new InMemoryEntity(this);
 
         public IEntity Complete(Type componentType, object parameters = null)
         {
             var component = ComponentInfo.For(componentType).Create(this, parameters);
+            _components.AddFirst(component);
+
+            // Explicitly do not descent the original components
             foreach (var other in _components)
                 ComponentInfo.For(other.GetType()).GetSupport(componentType)(other, component);
-            _components.AddFirst(component);
+
             return this;
         }
 

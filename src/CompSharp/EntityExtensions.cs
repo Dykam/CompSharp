@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace CompSharp
 {
     public static class EntityExtensions
@@ -34,6 +36,7 @@ namespace CompSharp
                     .Complete<T4>(parameters4)
                     .Complete<T5>(parameters5);
 
-        public static T Get<T>(this IEntity entity) where T : class => entity.Get(typeof (T)) as T;
+        public static T Get<T>(this IEntity entity) where T : class => entity.Get(typeof(T)) as T;
+        public static IEnumerable<T> GetAll<T>(this IEntity entity) where T : class => entity.GetAll(typeof(T)) as IEnumerable<T>;
     }
 }

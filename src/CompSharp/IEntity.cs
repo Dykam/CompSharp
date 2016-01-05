@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace CompSharp
 {
@@ -6,6 +7,7 @@ namespace CompSharp
     {
         Guid ID { get; }
         Component Get(Type componentType);
+        IEnumerable<Component> GetAll(Type componentType);
         IEntity Complete(Type componentType, object parameters = null);
         IEntity Augment();
     }
